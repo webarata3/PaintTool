@@ -3,42 +3,7 @@
  <head>
   <meta charset="utf-8">
   <title>お絵かきツール</title>
-  <style>
-   #paintTool {
-    display: flex;
-   }
-
-   #toolbar {
-    font-size: small;
-    margin-bottom: 3px;
-    display: flex;
-    flex-direction: column;
-   }
-
-   #drawTool > label {
-    background-color: #999;
-    border: solid 1px #999;
-    border-radius: 5px;
-    padding: 5px;
-   }
-
-   #drawTool > label:hover {
-    background-color: #eee;
-   }
-
-   #drawTool > input[type="radio"]:checked + label {
-    background-color: #fff;
-   }
-
-   #drawTool > input {
-    display: none;
-   }
-
-   #canvas {
-    border: 1px solid #000;
-    cursor: pointer;
-   }
-  </style>
+  <link rel="stylesheet" type="text/css" href="style.css">
  </head>
  <body>
   <div id="paintTool">
