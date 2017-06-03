@@ -30,7 +30,7 @@ const drawFuncList = (canvasModel, ctx) => {
       ctx.beginPath();
       ctx.moveTo(x, y);
     },
-    beforeDrawTool: (e) => {
+    beforeDrawLine: (e) => {
       const rect = e.target.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -38,19 +38,22 @@ const drawFuncList = (canvasModel, ctx) => {
       ctx.beginPath();
       ctx.moveTo(x, y);
     },
+    beforeDrawCircle: (e) => {
+      const rect = e.target.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      canvasModel.moveDraw(x, y, ctx.getImageData(0, 0, canvasModel.width, canvasModel.height));
+      ctx.beginPath();
+    },
     free: () => {
       ctx.putImageData(canvasModel.beforeImg, 0, 0);
-      // ctx.moveTo(canvasModel.beforeX, canvasModel.beforeY);
       ctx.lineTo(canvasModel.x, canvasModel.y);
       ctx.stroke();
       canvasModel.moveTo();
-
-
-      canvasModel._beforeImg =  ctx.getImageData(0, 0, canvasModel.width, canvasModel.height);
+      canvasModel._beforeImg = ctx.getImageData(0, 0, canvasModel.width, canvasModel.height);
     },
     line: () => {
       ctx.putImageData(canvasModel.beforeImg, 0, 0);
-      ctx.moveTo(canvasModel.beforeX, canvasModel.beforeY);
       ctx.lineTo(canvasModel.x, canvasModel.y);
       ctx.stroke();
     },
@@ -273,7 +276,7 @@ class CanvasView extends View {
     this._ctx.fillStyle = canvasModel.color;
     this._ctx.lineWidth = canvasModel.lineWidth;
     this._ctx.lineCap = canvasModel.lineCap;
-    this._ctx.lineJoin  = canvasModel.lineJoin;
+    this._ctx.lineJoin = canvasModel.lineJoin;
 
     this._setEvent({
       'mousemove canvas': this._onMouseMove,
@@ -302,21 +305,21 @@ class CanvasView extends View {
 
     this.drawType[PaintType.LINE] = {
       begin: drawFunc.begin,
-      beforeDraw: drawFunc.beforeDrawTool,
+      beforeDraw: drawFunc.beforeDrawLine,
       draw: drawFunc.line,
       finish: drawFunc.finish
     };
 
     this.drawType[PaintType.CIRCLE] = {
       begin: drawFunc.begin,
-      beforeDraw: drawFunc.beforeDrawTool,
+      beforeDraw: drawFunc.beforeDrawCircle,
       draw: drawFunc.circle,
       finish: drawFunc.finish
     };
 
     this.drawType[PaintType.CIRCLE_FILL] = {
       begin: drawFunc.begin,
-      beforeDraw: drawFunc.beforeDrawTool,
+      beforeDraw: drawFunc.beforeDrawCircle,
       draw: drawFunc.circleFill,
       finish: drawFunc.finish
     };
