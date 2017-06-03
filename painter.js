@@ -251,6 +251,7 @@ class CanvasView extends View {
     this._ctx.fillStyle = canvasModel.color;
     this._ctx.lineWidth = canvasModel.lineWidth;
     this._ctx.lineCap = 'round';
+    this._ctx.lineJoin  = "round";
 
     this._setEvent({
       'mousemove canvas': this._onMouseMove,
