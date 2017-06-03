@@ -250,6 +250,7 @@ class CanvasView extends View {
     this._ctx.strokeStyle = canvasModel.color;
     this._ctx.fillStyle = canvasModel.color;
     this._ctx.lineWidth = canvasModel.lineWidth;
+    this._ctx.lineCap = 'round';
 
     this._setEvent({
       'mousemove canvas': this._onMouseMove,
@@ -257,18 +258,17 @@ class CanvasView extends View {
       'mouseup canvas': this._onMouseUp
     });
 
-    this.canvasModel = canvasModel;
+    this._canvasModel = canvasModel;
 
-    this._setAppEvent(this.canvasModel, {
+    this._setAppEvent(this._canvasModel, {
       'draw': this._draw,
       'movePath': this._movePath,
-
       'changeColor': this._onChangeColor,
       'changeLineWidth': this._onChangeLineWidth,
       'changeOpacity': this._onChangeOpacity
     });
 
-    const drawFunc = drawFuncList(this.canvasModel, this._ctx);
+    const drawFunc = drawFuncList(this._canvasModel, this._ctx);
     this.drawType = [];
     this.drawType[PaintType.BRUSH] = {
       begin: drawFunc.begin,
@@ -300,34 +300,34 @@ class CanvasView extends View {
   }
 
   _onMouseMove(e) {
-    this.drawType[this.canvasModel.paintType].beforeDraw(e);
+    this.drawType[this._canvasModel.paintType].beforeDraw(e);
   }
 
   _onMouseDown(e) {
     if (e.button === 0) {
-      this.drawType[this.canvasModel.paintType].begin(e);
+      this.drawType[this._canvasModel.paintType].begin(e);
     }
   }
 
   _onMouseUp(e) {
-    this.drawType[this.canvasModel.paintType].finish(e);
+    this.drawType[this._canvasModel.paintType].finish(e);
   }
 
   _draw(e) {
-    this.drawType[this.canvasModel.paintType].draw(e);
+    this.drawType[this._canvasModel.paintType].draw(e);
   }
 
   _onChangeColor() {
-    this._ctx.strokeStyle = this.canvasModel.color;
-    this._ctx.fillStyle = this.canvasModel.color;
+    this._ctx.strokeStyle = this._canvasModel.color;
+    this._ctx.fillStyle = this._canvasModel.color;
   }
 
   _onChangeLineWidth() {
-    this._ctx.lineWidth = this.canvasModel.lineWidth;
+    this._ctx.lineWidth = this._canvasModel.lineWidth;
   }
 
   _onChangeOpacity() {
-    this._ctx.globalAlpha = this.canvasModel.opacity;
+    this._ctx.globalAlpha = this._canvasModel.opacity;
   }
 }
 
