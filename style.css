@@ -5,10 +5,11 @@
 }
 
 #toolbar {
-  font-size: small;
-  margin-bottom: 3px;
   display: flex;
   flex-direction: column;
+  font-size: small;
+  margin-bottom: 3px;
+  padding: 0 5px;
 }
 
 #drawTool > label {
