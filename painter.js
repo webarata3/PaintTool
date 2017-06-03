@@ -8,7 +8,7 @@ const PaintType = {
 };
 
 const PaintTypeMap = {
-  'bursh': PaintType.BRUSH,
+  'brush': PaintType.BRUSH,
   'line': PaintType.LINE,
   'circle': PaintType.CIRCLE,
   'circleFill': PaintType.CIRCLE_FILL
@@ -28,6 +28,7 @@ const drawFuncList = (canvasModel, ctx) => {
       const y = e.clientY - rect.top;
       canvasModel.moveDraw(x, y, null);
       ctx.beginPath();
+      ctx.moveTo(x, y);
     },
     beforeDrawTool: (e) => {
       const rect = e.target.getBoundingClientRect();
@@ -35,12 +36,17 @@ const drawFuncList = (canvasModel, ctx) => {
       const y = e.clientY - rect.top;
       canvasModel.moveDraw(x, y, ctx.getImageData(0, 0, canvasModel.width, canvasModel.height));
       ctx.beginPath();
+      ctx.moveTo(x, y);
     },
     free: () => {
-      ctx.moveTo(canvasModel.beforeX, canvasModel.beforeY);
+      ctx.putImageData(canvasModel.beforeImg, 0, 0);
+      // ctx.moveTo(canvasModel.beforeX, canvasModel.beforeY);
       ctx.lineTo(canvasModel.x, canvasModel.y);
       ctx.stroke();
       canvasModel.moveTo();
+
+
+      canvasModel._beforeImg =  ctx.getImageData(0, 0, canvasModel.width, canvasModel.height);
     },
     line: () => {
       ctx.putImageData(canvasModel.beforeImg, 0, 0);
@@ -226,13 +232,14 @@ class CanvasModel extends Model {
   }
 
   moveTo() {
-    this._beforeX = this.x;
-    this._beforeY = this.y;
+    this._beforeX = this._x;
+    this._beforeY = this._y;
   }
 
-  endDraw(x, y) {
+  endDraw(x, y, img) {
     this._drawing = false;
 
+    this._beforeImg = img;
     this._trigger('endDraw');
   }
 
