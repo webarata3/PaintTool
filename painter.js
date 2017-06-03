@@ -283,14 +283,14 @@ class ToolbarView extends View {
     this._canvasModel = canvasModel;
 
     this._setEvent({
-      'change drawTool': this._onChangeDrawTool,
+      'click drawTool': this._onClickDrawTool,
       'change color': this._onChangeColor,
       'change lineWidth': this._onChangeLineWidth,
       'change opacity': this._onChangeOpacity
     });
   }
 
-  _onChangeDrawTool(e) {
+  _onClickDrawTool(e) {
     switch(e.target.value) {
       case 'brush':
         this._canvasModel.setPaintType(PaintType.BRUSH);

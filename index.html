@@ -12,7 +12,7 @@
     font-size: small;
     margin-bottom: 3px;
     display: flex;
-    flex-direction:         column;
+    flex-direction: column;
    }
 
    #canvas {
@@ -24,12 +24,16 @@
  <body>
   <div id="paintTool">
    <div id="toolbar">
-    <select id="drawTool">
-     <option value="brush">ブラシ</option>
-     <option value="line">線</option>
-     <option value="circle">円</option>
-     <option value="circleFill">塗りつぶしの円</option>
-    </select>
+    <div id="drawTool">
+     <label for="drawTool1">ブラシ</label>
+     <input type="radio" name="drawTool" id="drawTool1" value="brush" checked>
+     <label for="drawTool2">線</label>
+     <input type="radio" name="drawTool" id="drawTool2" value="line">
+     <label for="drawTool3">円</label>
+     <input type="radio" name="drawTool" id="drawTool3" value="circle">
+     <label for="drawTool4">塗りつぶしの円</label>
+     <input type="radio" name="drawTool" id="drawTool4" value="circleFill">
+    </div>
     <input id="color" type="color">
     <label for="lineWidth">線幅</label>
     <select id="lineWidth">
