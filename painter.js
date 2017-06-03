@@ -217,7 +217,7 @@ class CanvasModel extends Model {
     this._beforeImg = img;
   }
 
-  moveDraw(x, y, img) {
+  moveDraw(x, y) {
     if (!this._drawing) return;
     this._x = x;
     this._y = y;
@@ -230,7 +230,7 @@ class CanvasModel extends Model {
     this._beforeY = this.y;
   }
 
-  endDraw(x, y, img) {
+  endDraw(x, y) {
     this._drawing = false;
 
     this._trigger('endDraw');
