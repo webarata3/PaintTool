@@ -11,23 +11,4 @@
     <annotation-enable>false</annotation-enable>
     <other-services-enabled>false</other-services-enabled>
   </component>
-  <component name="ProjectInspectionProfilesVisibleTreeState">
-    <entry key="Project Default">
-      <profile-state>
-        <expanded-state>
-          <State>
-            <id />
-          </State>
-          <State>
-            <id>Vue</id>
-          </State>
-        </expanded-state>
-        <selected-state>
-          <State>
-            <id>VueDuplicateTag</id>
-          </State>
-        </selected-state>
-      </profile-state>
-    </entry>
-  </component>
 </project>
