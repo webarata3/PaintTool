@@ -147,6 +147,8 @@ class CanvasModel extends Model {
     this._lineWidth = 1;
     this._color = '#000';
     this._opacity = 1.0;
+    this._lineCap = 'round';
+    this._lineJoin = 'round';
   }
 
   get beforeImg() {
@@ -183,6 +185,14 @@ class CanvasModel extends Model {
 
   get opacity() {
     return this._opacity;
+  }
+
+  get lineCap() {
+    return this._lineCap;
+  }
+
+  get lineJoin() {
+    return this._lineJoin;
   }
 
   draw(beforeX, beforeY, img) {
@@ -240,8 +250,8 @@ class CanvasView extends View {
     this._ctx.strokeStyle = canvasModel.color;
     this._ctx.fillStyle = canvasModel.color;
     this._ctx.lineWidth = canvasModel.lineWidth;
-    this._ctx.lineCap = 'round';
-    this._ctx.lineJoin  = "round";
+    this._ctx.lineCap = canvasModel.lineCap;
+    this._ctx.lineJoin  = canvasModel.lineJoin;
 
     this._setEvent({
       'mousemove canvas': this._onMouseMove,
