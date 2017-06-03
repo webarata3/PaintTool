@@ -20,7 +20,7 @@ const drawFuncList = (canvasModel, ctx) => {
       const rect = e.target.getBoundingClientRect();
       const beforeX = e.clientX - rect.left;
       const beforeY = e.clientY - rect.top;
-      canvasModel.draw(beforeX, beforeY, ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height));
+      canvasModel.draw(beforeX, beforeY, ctx.getImageData(0, 0, canvasModel.width, canvasModel.height));
     },
     beforeDraw: (e) => {
       const rect = e.target.getBoundingClientRect();
@@ -33,22 +33,22 @@ const drawFuncList = (canvasModel, ctx) => {
       const rect = e.target.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      canvasModel.moveDraw(x, y, ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height));
+      canvasModel.moveDraw(x, y, ctx.getImageData(0, 0, canvasModel.width, canvasModel.height));
       ctx.beginPath();
     },
-    free: (e) => {
+    free: () => {
       ctx.moveTo(canvasModel.beforeX, canvasModel.beforeY);
       ctx.lineTo(canvasModel.x, canvasModel.y);
       ctx.stroke();
       canvasModel.moveTo();
     },
-    line: (e) => {
+    line: () => {
       ctx.putImageData(canvasModel.beforeImg, 0, 0);
       ctx.moveTo(canvasModel.beforeX, canvasModel.beforeY);
       ctx.lineTo(canvasModel.x, canvasModel.y);
       ctx.stroke();
     },
-    circle: (e) => {
+    circle: () => {
       ctx.putImageData(canvasModel.beforeImg, 0, 0);
       const dx = canvasModel.beforeX - canvasModel.x;
       const dy = canvasModel.beforeY - canvasModel.y;
@@ -56,7 +56,7 @@ const drawFuncList = (canvasModel, ctx) => {
       ctx.arc(canvasModel.beforeX, canvasModel.beforeY, r, 0, 2 * Math.PI, false);
       ctx.stroke();
     },
-    circleFill: (e) => {
+    circleFill: () => {
       ctx.putImageData(canvasModel.beforeImg, 0, 0);
       const dx = canvasModel.beforeX - canvasModel.x;
       const dy = canvasModel.beforeY - canvasModel.y;
@@ -156,6 +156,14 @@ class CanvasModel extends Model {
     this._opacity = 1.0;
     this._lineCap = 'round';
     this._lineJoin = 'round';
+  }
+
+  get width() {
+    return this._width;
+  }
+
+  get height() {
+    return this._height;
   }
 
   get beforeImg() {
