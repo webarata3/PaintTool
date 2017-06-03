@@ -20,15 +20,16 @@ const drawFuncList = (canvasModel, ctx) => {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       canvasModel.moveDraw(x, y, null);
+      ctx.beginPath();
     },
     beforeDrawTool: (e) => {
       const rect = e.target.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       canvasModel.moveDraw(x, y, ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height));
+      ctx.beginPath();
     },
     free: (e) => {
-      ctx.beginPath();
       ctx.moveTo(canvasModel.beforeX, canvasModel.beforeY);
       ctx.lineTo(canvasModel.x, canvasModel.y);
       ctx.stroke();
@@ -36,14 +37,12 @@ const drawFuncList = (canvasModel, ctx) => {
     },
     line: (e) => {
       ctx.putImageData(canvasModel.beforeImg, 0, 0);
-      ctx.beginPath();
       ctx.moveTo(canvasModel.beforeX, canvasModel.beforeY);
       ctx.lineTo(canvasModel.x, canvasModel.y);
       ctx.stroke();
     },
     circle: (e) => {
       ctx.putImageData(canvasModel.beforeImg, 0, 0);
-      ctx.beginPath();
       const dx = canvasModel.beforeX - canvasModel.x;
       const dy = canvasModel.beforeY - canvasModel.y;
       const r = Math.sqrt(dx * dx + dy * dy);
@@ -52,7 +51,6 @@ const drawFuncList = (canvasModel, ctx) => {
     },
     circleFill: (e) => {
       ctx.putImageData(canvasModel.beforeImg, 0, 0);
-      ctx.beginPath();
       const dx = canvasModel.beforeX - canvasModel.x;
       const dy = canvasModel.beforeY - canvasModel.y;
       const r = Math.sqrt(dx * dx + dy * dy);
@@ -210,7 +208,6 @@ class CanvasModel extends Model {
   }
 
   moveTo() {
-    if (this._paintType !== PaintType.BRUSH) return;
     this._beforeX = this.x;
     this._beforeY = this.y;
   }
