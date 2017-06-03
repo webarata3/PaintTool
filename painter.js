@@ -7,6 +7,13 @@ const PaintType = {
   CIRCLE_FILL: 3
 };
 
+const PaintTypeMap = {
+  'bursh': PaintType.BRUSH,
+  'line': PaintType.LINE,
+  'circle': PaintType.CIRCLE,
+  'circleFill': PaintType.CIRCLE_FILL
+};
+
 const drawFuncList = (canvasModel, ctx) => {
   return {
     begin: (e) => {
@@ -348,20 +355,7 @@ class ToolbarView extends View {
   }
 
   _onClickDrawTool(e) {
-    switch (e.target.value) {
-      case 'brush':
-        this._canvasModel.setPaintType(PaintType.BRUSH);
-        break;
-      case 'line':
-        this._canvasModel.setPaintType(PaintType.LINE);
-        break;
-      case 'circle':
-        this._canvasModel.setPaintType(PaintType.CIRCLE);
-        break;
-      case 'circleFill':
-        this._canvasModel.setPaintType(PaintType.CIRCLE_FILL);
-        break;
-    }
+    return this._canvasModel.setPaintType(PaintTypeMap[e.target.value]);
   }
 
   _onChangeColor(e) {
