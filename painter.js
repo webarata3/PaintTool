@@ -185,10 +185,6 @@ class CanvasModel extends Model {
     return this._opacity;
   }
 
-  isTool() {
-    return !(this._paintType === PaintType.BRUSH);
-  }
-
   draw(beforeX, beforeY, img) {
     this._drawing = true;
     this._beforeX = beforeX;
@@ -200,9 +196,6 @@ class CanvasModel extends Model {
     if (!this._drawing) return;
     this._x = x;
     this._y = y;
-    if (!this.isTool()) {
-      this._beforeImg = img;
-    }
 
     this._trigger('draw');
   }
