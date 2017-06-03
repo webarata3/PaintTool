@@ -37,7 +37,10 @@
      <option value="28">28</option>
     </select>
     <label for="opacity">透明度</label>
-    <input id="opacity" type="range" min="0" max="1" step="0.05" value="1.0">
+    <div id="opacity">
+     <input id="opacityNumber" type="number" min="0" max="1" step="0.05" value="1.0">
+     <input id="opacityRange" type="range" min="0" max="1" step="0.05" value="1.0">
+    </div>
    </div>
    <canvas id="canvas" width="600" height="400"></canvas>
   </div>

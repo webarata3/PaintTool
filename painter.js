@@ -368,7 +368,7 @@ class ToolbarView extends View {
       'click drawTool': this._onClickDrawTool,
       'change color': this._onChangeColor,
       'change lineWidth': this._onChangeLineWidth,
-      'change opacity': this._onChangeOpacity
+      'change opacityNumber': this._onChangeOpacity
     });
   }
 
@@ -389,12 +389,37 @@ class ToolbarView extends View {
   }
 }
 
+class OpacityView extends View {
+  constructor(el) {
+    super();
+
+    this.$el = document.getElementById(el);
+
+    this._$opacityNumber = document.getElementById('opacityNumber');
+    this._$opacityRange = document.getElementById('opacityRange');
+
+    this._setEvent({
+      'change opacityNumber': this._onChangeOpacityNumber,
+      'change opacityRange': this._onChangeOpacityRange
+    });
+  }
+
+  _onChangeOpacityNumber(e) {
+    this._$opacityRange.value = e.target.value;
+  }
+
+  _onChangeOpacityRange(e) {
+    this._$opacityNumber.value = e.target.value;
+  }
+}
+
 class AppController {
   constructor() {
     this.canvasModel = new CanvasModel(600, 400);
 
     new CanvasView('canvas', this.canvasModel);
     new ToolbarView('toolbar', this.canvasModel);
+    new OpacityView('opacity');
   }
 }
 
