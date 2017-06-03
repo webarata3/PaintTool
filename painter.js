@@ -7,6 +7,67 @@ const PaintType = {
   CIRCLE_FILL: 3
 };
 
+const drawFuncList = (canvasModel, ctx) => {
+  return {
+    begin: (e) => {
+      const rect = e.target.getBoundingClientRect();
+      const beforeX = e.clientX - rect.left;
+      const beforeY = e.clientY - rect.top;
+      canvasModel.draw(beforeX, beforeY, ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height));
+    },
+    beforeDraw: (e) => {
+      const rect = e.target.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      canvasModel.moveDraw(x, y, null);
+    },
+    beforeDrawTool: (e) => {
+      const rect = e.target.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      canvasModel.moveDraw(x, y, ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height));
+    },
+    free: (e) => {
+      ctx.beginPath();
+      ctx.moveTo(canvasModel.beforeX, canvasModel.beforeY);
+      ctx.lineTo(canvasModel.x, canvasModel.y);
+      ctx.stroke();
+      canvasModel.moveTo();
+    },
+    line: (e) => {
+      ctx.putImageData(canvasModel.beforeImg, 0, 0);
+      ctx.beginPath();
+      ctx.moveTo(canvasModel.beforeX, canvasModel.beforeY);
+      ctx.lineTo(canvasModel.x, canvasModel.y);
+      ctx.stroke();
+    },
+    circle: (e) => {
+      ctx.putImageData(canvasModel.beforeImg, 0, 0);
+      ctx.beginPath();
+      const dx = canvasModel.beforeX - canvasModel.x;
+      const dy = canvasModel.beforeY - canvasModel.y;
+      const r = Math.sqrt(dx * dx + dy * dy);
+      ctx.arc(canvasModel.beforeX, canvasModel.beforeY, r, 0, 2 * Math.PI, false);
+      ctx.stroke();
+    },
+    circleFill: (e) => {
+      ctx.putImageData(canvasModel.beforeImg, 0, 0);
+      ctx.beginPath();
+      const dx = canvasModel.beforeX - canvasModel.x;
+      const dy = canvasModel.beforeY - canvasModel.y;
+      const r = Math.sqrt(dx * dx + dy * dy);
+      ctx.arc(canvasModel.beforeX, canvasModel.beforeY, r, 0, 2 * Math.PI, false);
+      ctx.fill();
+    },
+    finish: (e) => {
+      const rect = e.target.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      canvasModel.endDraw(x, y, ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height));
+    }
+  }
+};
+
 class Model {
   constructor() {
     this._attributeList = {};
@@ -126,11 +187,11 @@ class CanvasModel extends Model {
     return this._opacity;
   }
 
-  isTool (){
+  isTool() {
     return !(this._paintType === PaintType.BRUSH);
   }
 
-  beginDraw(beforeX, beforeY, img) {
+  draw(beforeX, beforeY, img) {
     this._drawing = true;
     this._beforeX = beforeX;
     this._beforeY = beforeY;
@@ -145,7 +206,7 @@ class CanvasModel extends Model {
       this._beforeImg = img;
     }
 
-    this._trigger('beginDraw');
+    this._trigger('draw');
   }
 
   moveTo() {
@@ -199,66 +260,61 @@ class CanvasView extends View {
     this.canvasModel = canvasModel;
 
     this._setAppEvent(this.canvasModel, {
-      'beginDraw': this._beginDraw,
+      'draw': this._draw,
       'movePath': this._movePath,
 
       'changeColor': this._onChangeColor,
       'changeLineWidth': this._onChangeLineWidth,
       'changeOpacity': this._onChangeOpacity
     });
+
+    const drawFunc = drawFuncList(this.canvasModel, this._ctx);
+    this.drawType = [];
+    this.drawType[PaintType.BRUSH] = {
+      begin: drawFunc.begin,
+      beforeDraw: drawFunc.beforeDraw,
+      draw: drawFunc.free,
+      finish: drawFunc.finish
+    };
+
+    this.drawType[PaintType.LINE] = {
+      begin: drawFunc.begin,
+      beforeDraw: drawFunc.beforeDrawTool,
+      draw: drawFunc.line,
+      finish: drawFunc.finish
+    };
+
+    this.drawType[PaintType.CIRCLE] = {
+      begin: drawFunc.begin,
+      beforeDraw: drawFunc.beforeDrawTool,
+      draw: drawFunc.circle,
+      finish: drawFunc.finish
+    };
+
+    this.drawType[PaintType.CIRCLE_FILL] = {
+      begin: drawFunc.begin,
+      beforeDraw: drawFunc.beforeDrawTool,
+      draw: drawFunc.circleFill,
+      finish: drawFunc.finish
+    };
   }
 
   _onMouseMove(e) {
-    const rect = e.target.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    if (this.canvasModel.isTool) {
-      this.canvasModel.moveDraw(x, y, this._ctx.getImageData(0, 0, this._ctx.canvas.width, this._ctx.canvas.height));
-    } else {
-      this.canvasModel.moveDraw(x, y, null);
-    }
+    this.drawType[this.canvasModel.paintType].beforeDraw(e);
   }
 
   _onMouseDown(e) {
     if (e.button === 0) {
-      const rect = e.target.getBoundingClientRect();
-      const beforeX = e.clientX - rect.left;
-      const beforeY = e.clientY - rect.top;
-      this.canvasModel.beginDraw(beforeX, beforeY, this._ctx.getImageData(0, 0, this._ctx.canvas.width, this._ctx.canvas.height));
+      this.drawType[this.canvasModel.paintType].begin(e);
     }
   }
 
   _onMouseUp(e) {
-    const rect = e.target.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    this.canvasModel.endDraw(x, y, this._ctx.getImageData(0, 0, this._ctx.canvas.width, this._ctx.canvas.height));
+    this.drawType[this.canvasModel.paintType].finish(e);
   }
 
-  _beginDraw(e) {
-    if (this.canvasModel.isTool()) {
-      this._ctx.putImageData(this.canvasModel.beforeImg, 0, 0);
-    }
-    if (this.canvasModel.paintType === PaintType.BRUSH ||
-      this.canvasModel.paintType === PaintType.LINE) {
-      this._ctx.beginPath();
-      this._ctx.moveTo(this.canvasModel.beforeX, this.canvasModel.beforeY);
-      this._ctx.lineTo(this.canvasModel.x, this.canvasModel.y);
-      this._ctx.stroke();
-      this.canvasModel.moveTo();
-    } else if (this.canvasModel.paintType === PaintType.CIRCLE ||
-      this.canvasModel.paintType === PaintType.CIRCLE_FILL) {
-      this._ctx.beginPath();
-      const dx = this.canvasModel.beforeX - this.canvasModel.x;
-      const dy = this.canvasModel.beforeY - this.canvasModel.y;
-      const r = Math.sqrt(dx * dx + dy * dy);
-      this._ctx.arc(this.canvasModel.beforeX, this.canvasModel.beforeY, r, 0, 2 * Math.PI, false);
-      if (this.canvasModel.paintType === PaintType.CIRCLE_FILL) {
-        this._ctx.fill();
-      } else {
-        this._ctx.stroke();
-      }
-    }
+  _draw(e) {
+    this.drawType[this.canvasModel.paintType].draw(e);
   }
 
   _onChangeColor() {
@@ -291,7 +347,7 @@ class ToolbarView extends View {
   }
 
   _onClickDrawTool(e) {
-    switch(e.target.value) {
+    switch (e.target.value) {
       case 'brush':
         this._canvasModel.setPaintType(PaintType.BRUSH);
         break;
