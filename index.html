@@ -15,6 +15,24 @@
     flex-direction: column;
    }
 
+   #drawTool > label {
+    border: solid 1px #999;
+    border-radius: 5px;
+    padding: 5px;
+   }
+
+   #drawTool > label:hover {
+    background-color: #eee;
+   }
+
+   #drawTool > input[type="radio"]:checked + label {
+    background-color: #f00;
+   }
+
+   #drawTool > input {
+    display: none;
+   }
+
    #canvas {
     border: 1px solid #000;
     cursor: pointer;
@@ -25,14 +43,14 @@
   <div id="paintTool">
    <div id="toolbar">
     <div id="drawTool">
-     <label for="drawTool1">ブラシ</label>
      <input type="radio" name="drawTool" id="drawTool1" value="brush" checked>
-     <label for="drawTool2">線</label>
+     <label for="drawTool1">ブラシ</label>
      <input type="radio" name="drawTool" id="drawTool2" value="line">
-     <label for="drawTool3">円</label>
+     <label for="drawTool2">線</label>
      <input type="radio" name="drawTool" id="drawTool3" value="circle">
-     <label for="drawTool4">塗りつぶしの円</label>
+     <label for="drawTool3">円</label>
      <input type="radio" name="drawTool" id="drawTool4" value="circleFill">
+     <label for="drawTool4">塗りつぶしの円</label>
     </div>
     <input id="color" type="color">
     <label for="lineWidth">線幅</label>
