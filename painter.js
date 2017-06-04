@@ -36,7 +36,6 @@ const drawFuncList = (canvasModel, ctx) => {
       const y = e.clientY - rect.top;
       canvasModel.moveDraw(x, y, ctx.getImageData(0, 0, canvasModel.width, canvasModel.height));
       ctx.beginPath();
-      ctx.moveTo(x, y);
     },
     beforeDrawCircle: (e) => {
       const rect = e.target.getBoundingClientRect();
@@ -54,6 +53,7 @@ const drawFuncList = (canvasModel, ctx) => {
     },
     line: () => {
       ctx.putImageData(canvasModel.beforeImg, 0, 0);
+      ctx.moveTo(canvasModel.beforeX, canvasModel.beforeY);
       ctx.lineTo(canvasModel.x, canvasModel.y);
       ctx.stroke();
     },
