@@ -3,53 +3,32 @@
  <head>
   <meta charset="utf-8">
   <title>お絵かきツール</title>
-  <style>
-   #paintTool {
-    display: flex;
-   }
-
-   #toolbar {
-    font-size: small;
-    margin-bottom: 3px;
-    display: flex;
-    flex-direction:         column;
-   }
-
-   #canvas {
-    border: 1px solid #000;
-    cursor: pointer;
-   }
-  </style>
+  <link rel="stylesheet" type="text/css" href="style.css">
  </head>
  <body>
   <div id="paintTool">
    <div id="toolbar">
-    <select id="drawTool">
-     <option value="brush">ブラシ</option>
-     <option value="line">線</option>
-     <option value="circle">円</option>
-     <option value="circleFill">塗りつぶしの円</option>
-    </select>
+    <div id="drawTool">
+     <input type="radio" name="drawTool" id="drawTool1" value="brush" checked>
+     <label for="drawTool1">ブラシ</label>
+     <input type="radio" name="drawTool" id="drawTool2" value="line">
+     <label for="drawTool2">線</label>
+     <input type="radio" name="drawTool" id="drawTool3" value="circle">
+     <label for="drawTool3">円</label>
+     <input type="radio" name="drawTool" id="drawTool4" value="circleFill">
+     <label for="drawTool4">塗りつぶしの円</label>
+    </div>
     <input id="color" type="color">
     <label for="lineWidth">線幅</label>
-    <select id="lineWidth">
-     <option value="1">1</option>
-     <option value="2">2</option>
-     <option value="3">3</option>
-     <option value="4">4</option>
-     <option value="5">5</option>
-     <option value="6">6</option>
-     <option value="8">8</option>
-     <option value="10">10</option>
-     <option value="12">12</option>
-     <option value="14">14</option>
-     <option value="16">16</option>
-     <option value="20">20</option>
-     <option value="24">24</option>
-     <option value="28">28</option>
-    </select>
+    <div id="lineWidth">
+     <input id="lineWidthNumber" type="number" min="1" max="100" step="1" value="1">
+     <input id="lineWidthRange" type="range" min="1" max="100" step="1" value="1">
+    </div>
     <label for="opacity">透明度</label>
-    <input id="opacity" type="range" min="0" max="1" step="0.05" value="1.0">
+    <div id="opacity">
+     <input id="opacityNumber" type="number" min="0" max="1" step="0.05" value="1.0">
+     <input id="opacityRange" type="range" min="0" max="1" step="0.05" value="1.0">
+    </div>
    </div>
    <canvas id="canvas" width="600" height="400"></canvas>
   </div>

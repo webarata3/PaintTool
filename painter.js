@@ -366,9 +366,7 @@ class ToolbarView extends View {
 
     this._setEvent({
       'click drawTool': this._onClickDrawTool,
-      'change color': this._onChangeColor,
-      'change lineWidth': this._onChangeLineWidth,
-      'change opacityNumber': this._onChangeOpacity
+      'change color': this._onChangeColor
     });
   }
 
@@ -379,21 +377,45 @@ class ToolbarView extends View {
   _onChangeColor(e) {
     this._canvasModel.setColor(e.target.value);
   }
+}
 
-  _onChangeLineWidth(e) {
+class LineWidthView extends View {
+  constructor(el, canvasModel) {
+    super();
+
+    this.$el = document.getElementById(el);
+
+    this._canvasModel = canvasModel;
+
+    this._$lineWidthNumber = document.getElementById('lineWidthNumber');
+    this._$lineWidthRange = document.getElementById('lineWidthRange');
+
+    this._setEvent({
+      'change lineWidthNumber': this._onChangeLineWidthNumber,
+      'change lineWidthRange': this._onChangeLineWidthRange
+    });
+  }
+
+  _onChangeLineWidthNumber(e) {
+    console.log(e.target.value);
+    this._$lineWidthRange.value = e.target.value;
     this._canvasModel.setLineWidth(e.target.value);
   }
 
-  _onChangeOpacity(e) {
-    this._canvasModel.setOpacity(e.target.value);
+  _onChangeLineWidthRange(e) {
+    console.log(e.target.value);
+    this._$lineWidthNumber.value = e.target.value;
+    this._canvasModel.setLineWidth(e.target.value);
   }
 }
 
 class OpacityView extends View {
-  constructor(el) {
+  constructor(el, canvasModel) {
     super();
 
     this.$el = document.getElementById(el);
+
+    this._canvasModel = canvasModel;
 
     this._$opacityNumber = document.getElementById('opacityNumber');
     this._$opacityRange = document.getElementById('opacityRange');
@@ -406,10 +428,12 @@ class OpacityView extends View {
 
   _onChangeOpacityNumber(e) {
     this._$opacityRange.value = e.target.value;
+    this._canvasModel.setOpacity(e.target.value);
   }
 
   _onChangeOpacityRange(e) {
     this._$opacityNumber.value = e.target.value;
+    this._canvasModel.setOpacity(e.target.value);
   }
 }
 
@@ -419,7 +443,8 @@ class AppController {
 
     new CanvasView('canvas', this.canvasModel);
     new ToolbarView('toolbar', this.canvasModel);
-    new OpacityView('opacity');
+    new LineWidthView('lineWidth', this.canvasModel);
+    new OpacityView('opacity', this.canvasModel);
   }
 }
 
